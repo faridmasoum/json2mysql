@@ -46,7 +46,6 @@ class FetchDataApi
 			if($skip == 0) echo "Total number of configurables: ".$response["count"]."<br/>";
 			
 			 for ($i = 0; $i < count($response["items"]); $i++) {
-				 //var_dump();
 				 foreach($response["items"][$i]["items"] as $item ) {
 				 $itemArray = [];
 				   foreach($response["items"][$i]["_id"] as $fieldKey => $fieldValue ) {	
@@ -62,28 +61,6 @@ class FetchDataApi
 							array_push($this->allFields, $fieldFinal );
 						}
 						$itemArray[$fieldFinal] = $fieldValue;	
-						/*
-						
-						// Custom Fields
-						if(strpos($fieldKey, "image_filename") !== false && is_array($fieldValue)) {
-							//first image of _D / _C ...
-							$fieldFinalImage = $fieldFinal."_first_image";
-							 if(!in_array($fieldFinalImage , $this->allFields, true)){
-								array_push($this->allFields, $fieldFinalImage );
-							}
-							$_fieldValue = $fieldValue[0]["img"];
-							$itemArray[$fieldFinalImage] = $_fieldValue;	
-							
-							//first title of _D / _C ...
-							$fieldFinalTitle = $fieldFinal."_first_title";
-							 if(!in_array($fieldFinalTitle , $this->allFields, true)){
-								array_push($this->allFields, $fieldFinalTitle );
-							}
-							$_fieldValue = isset($fieldValue[0]["dscr"])?$fieldValue[0]["dscr"]:"";
-							$itemArray[$fieldFinalTitle] = $_fieldValue;	
-						}
-						
-						*/
 					}
 				 }
 				  $this->itemsArray[] = $itemArray;

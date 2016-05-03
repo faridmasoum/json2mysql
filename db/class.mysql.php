@@ -34,7 +34,7 @@ class Mysql
     {
         $databaseName = $this->CONFIG["MYSQL"]["dbname"];
 		foreach($itemsArray as $itemArray) {
-				$fields=array_keys($itemArray); // here you have to trust your field names! 
+				$fields=array_keys($itemArray); 
 				$values=array_values($itemArray);
 				foreach($values as $key => $value) {
 					if(is_array($value)) {
