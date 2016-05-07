@@ -1,48 +1,11 @@
-<?php
-//error_reporting(0);
-
-set_time_limit(0);
-ini_set('memory_limit', '3024M');  
-// require
-require_once '_includes/class.fetch.php';
-require_once '_includes/db/class.mysql.php';
-require_once '_includes/installation.php';
-
-
- 
-if(!checkIsInstall())  
-{
-	echo ' <META http-equiv="refresh" content="0;URL=wizard.php">';
-	exit();
-}
- 
-$CONFIG = parse_ini_file("./_config/config.ini", true);
-	
-	// mysql object
-	$mysqlOb = new Mysql($CONFIG); 
-	
-	// create table and fields
-	$mysqlOb->install();
-
-	// fetch object
-	$fetchObj = new FetchDataApi;
-	$fetchObj->fetchData();
-	$itemsArray = $fetchObj->itemsArray; // all items array
-	 
-	// if the array exists 
-	if(count($itemsArray) > 0)
-	 $mysqlOb->insertToDatabase($itemsArray);
-	else
-		echo "No Item";
-	 
-	
-	
-	
-?>
-
 <html>
 <head>
+ <?php 
  
+	   echo ' <META http-equiv="refresh" content="0;URL=index.php">';
+ 
+  
+	?>
 <title>
 Installation
  </title>
@@ -191,49 +154,14 @@ input.valid, textarea.valid{
 </style>
  
  
- 
 </head>
 <body>
 <div class="form-style-10">
-<h1>API fetch finished, fetching results</span></h1> <br>
+<h1>Installation Completed Successfully.<br> Please wait for completion...........</span></h1>
 
-<h3>Products Count: <?php echo $mysqlOb->reportCount(); ?></h3> <br>
-
-
-<h3>Vendors </h3>
- 
-<div style="border-style: outset; margin:2px">
-<?php foreach($mysqlOb->reportVendors() as $row) { ?>
-<p>
-<?php echo $row["RMI_vendor_uid"]; ?>
-</p>
-<?php } ?>
-</div>
- 
- <h3>Designes </h3>
- 
- <div style="border-style: outset; margin:2px">
-<?php foreach($mysqlOb->reportDesignes() as $row) { ?>
-<p>
-<?php echo $row["RMI_design_name"]; ?>
-</p>
-<?php } ?>
- </div>
- 
- 
-  <h3>Collections </h3>
- <div style="border-style: outset; margin:2px">
-<?php foreach($mysqlOb->reportCollections() as $row) { ?>
-<p>
-<?php echo $row["RMI_collection_name"]; ?>
-</p>
-<?php } ?>
-</div>
- 
 </div>
 </body>
 </html>
 
- 
- 
+
  

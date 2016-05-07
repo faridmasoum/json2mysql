@@ -1,48 +1,33 @@
-<?php
-//error_reporting(0);
-
-set_time_limit(0);
-ini_set('memory_limit', '3024M');  
-// require
-require_once '_includes/class.fetch.php';
-require_once '_includes/db/class.mysql.php';
-require_once '_includes/installation.php';
-
-
- 
-if(!checkIsInstall())  
-{
-	echo ' <META http-equiv="refresh" content="0;URL=wizard.php">';
-	exit();
-}
- 
-$CONFIG = parse_ini_file("./_config/config.ini", true);
-	
-	// mysql object
-	$mysqlOb = new Mysql($CONFIG); 
-	
-	// create table and fields
-	$mysqlOb->install();
-
-	// fetch object
-	$fetchObj = new FetchDataApi;
-	$fetchObj->fetchData();
-	$itemsArray = $fetchObj->itemsArray; // all items array
-	 
-	// if the array exists 
-	if(count($itemsArray) > 0)
-	 $mysqlOb->insertToDatabase($itemsArray);
-	else
-		echo "No Item";
-	 
-	
-	
-	
-?>
-
 <html>
 <head>
- 
+<?php 
+require_once('_includes/installation.php');
+
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+	
+$sampleData = array(
+                'API' => array(
+                    'url' => (isset($_POST['api_url']) && strlen(trim($_POST['api_url'])) > 0 )?trim($_POST['api_url']):"http://api.rmdatalink.com/api/product/config",
+					'token' => (isset($_POST['api_token']))?trim($_POST['api_token']):"",
+					'limit' => (isset($_POST['api_limit']) && $_POST['api_limit'] <= 300 && strlen(trim($_POST['api_limit'])) > 0)?trim($_POST['api_limit']):300,
+					'skip' => 0,
+                ),
+                'MYSQL' => array(
+                    'dbname' => (isset($_POST['db-name']))?trim($_POST['db-name']):"",
+                    'username' => (isset($_POST['db-user']))?trim($_POST['db-user']):"",
+                    'password' => (isset($_POST['db-password']))?trim($_POST['db-password']):"",
+                    'host' => (isset($_POST['db-host']))?trim($_POST['db-host']):"",
+                ));
+	writeIniFile($sampleData, './_config/config.ini', true);
+	writeIniFile([], './_config/install', true); //installed
+  echo ' <META http-equiv="refresh" content="0;URL=complete.php">';
+}
+/*
+if( checkIsInstall())  {
+	 
+}
+*/
+ ?>
 <title>
 Installation
  </title>
@@ -51,7 +36,7 @@ Installation
  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
 <style type="text/css">
 .form-style-10{
-    width:800px;
+    width:450px;
     padding:30px;
     margin:40px auto;
     background: #FFF;
@@ -189,51 +174,62 @@ input.valid, textarea.valid{
 }
 
 </style>
- 
- 
+ <script>
+ var fields = {
+	 'Token':'api_token',
+	 'Databse Host':'db-host',
+	 'Databse Name':'db-name',
+	 'Databse User':'db-user',
+	 };
+	 $( document ).ready(function() {
+	  $('form').submit(function( event ) {
+		$.each(fields, function( key, value ) {
+		  if($('#'+value).val() == "") {
+			   alert(key+" is empty!");
+			   $('#'+value).focus();
+			   $('#'+value).css('background-color' , 'red');
+			   event.preventDefault();
+			  return false;
+		  }
+		  else {
+			   $('#'+value).css('background-color' , 'white');
+		  }  
+		});
+	  });
+	});
+ </script>
  
 </head>
 <body>
 <div class="form-style-10">
-<h1>API fetch finished, fetching results</span></h1> <br>
+<h1>RMI Json to MySql Convertor - Getting Started</span></h1>
+<form name="configs" id="form-config" method="post">
+    <div class="section"><span>1</span>API</div>
+    <div class="inner-wrap">
+        <label>Token Url <sub>default = leave blank</sub><input type="text" name="api_url" id="api_url" placeholder="http://api.rmdatalink.com/api/product/config" /></label>	
+		<label>Token Code <input type="text" name="api_token" id="api_token"  /></label><span class="error">A Token is required</span>	
+       
+    </div>
 
-<h3>Products Count: <?php echo $mysqlOb->reportCount(); ?></h3> <br>
+    <div class="section"><span>2</span>MySql Database</div>
+    <div class="inner-wrap">
+	<label>DB Host  <input type="text" name="db-host"  id="db-host" /></label><span class="error">A Host is required</span>	
+        <label>DB Name <input type="text" name="db-name" id="db-name" /></label><span class="error">A DB Name is required</span>	
+        <label>DB User  <input type="text" name="db-user" id="db-user" /></label><span class="error">A DB User required</span>	
+		 <label>DB Pass  <input type="password" name="db-password"  id="db-password" /></label><span class="error">A DB Pass is required</span>	
+    </div>
 
-
-<h3>Vendors </h3>
- 
-<div style="border-style: outset; margin:2px">
-<?php foreach($mysqlOb->reportVendors() as $row) { ?>
-<p>
-<?php echo $row["RMI_vendor_uid"]; ?>
-</p>
-<?php } ?>
-</div>
- 
- <h3>Designes </h3>
- 
- <div style="border-style: outset; margin:2px">
-<?php foreach($mysqlOb->reportDesignes() as $row) { ?>
-<p>
-<?php echo $row["RMI_design_name"]; ?>
-</p>
-<?php } ?>
- </div>
- 
- 
-  <h3>Collections </h3>
- <div style="border-style: outset; margin:2px">
-<?php foreach($mysqlOb->reportCollections() as $row) { ?>
-<p>
-<?php echo $row["RMI_collection_name"]; ?>
-</p>
-<?php } ?>
-</div>
- 
+    <div class="section"><span>3</span>API Requests Limits (default and maximum: 300)</div>
+        <div class="inner-wrap">
+        <label>Limit <input type="text" name="api_limit" id="api_limit" placeholder="300" /></label>
+  </div>
+  <div class="button-section">
+   <input type="submit" name="Install" value="install" />
+  </div>
+</form>
 </div>
 </body>
 </html>
 
- 
- 
+
  
