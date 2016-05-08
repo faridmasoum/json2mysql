@@ -12,3 +12,9 @@ Usage
 -----
 
 visit index.php
+
+
+Re-install
+-----
+
+Remove install file from _config/ directory
