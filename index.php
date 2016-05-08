@@ -22,11 +22,9 @@ $CONFIG = parse_ini_file("./_config/config.ini", true);
 	$mysqlOb = new Mysql($CONFIG); 
 	
 	// create table and fields
-	$mysqlOb->install();
+	$fetchObj = $mysqlOb->install();
 
 	// fetch object
-	$fetchObj = new FetchDataApi;
-	$fetchObj->fetchData();
 	$itemsArray = $fetchObj->itemsArray; // all items array
 	 
 	// if the array exists 
@@ -203,31 +201,38 @@ input.valid, textarea.valid{
 <h3>Vendors </h3>
  
 <div style="border-style: outset; margin:2px">
+<ul>
 <?php foreach($mysqlOb->reportVendors() as $row) { ?>
-<p>
+<li>
 <?php echo $row["RMI_vendor_uid"]; ?>
-</p>
+</li>
 <?php } ?>
+</ul>
 </div>
  
  <h3>Designes </h3>
  
- <div style="border-style: outset; margin:2px">
+<div style="border-style: outset; margin:2px">
+<ul>
 <?php foreach($mysqlOb->reportDesignes() as $row) { ?>
-<p>
+<li>
 <?php echo $row["RMI_design_name"]; ?>
-</p>
+</li>
 <?php } ?>
- </div>
+</ul>
+</div>
  
  
   <h3>Collections </h3>
- <div style="border-style: outset; margin:2px">
+  
+<div style="border-style: outset; margin:2px">
+<ul>
 <?php foreach($mysqlOb->reportCollections() as $row) { ?>
-<p>
+<li>
 <?php echo $row["RMI_collection_name"]; ?>
-</p>
+</li>
 <?php } ?>
+</ul>
 </div>
  
 </div>

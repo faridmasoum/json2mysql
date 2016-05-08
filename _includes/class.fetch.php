@@ -44,7 +44,7 @@ class FetchDataApi
 			$result = str_replace(',}', '}', $result);
             $result = str_replace(',]', ']', $result);
             $response = json_decode($result, true);
-			//if($skip == 0) echo "Total number of configurables: ".$response["count"]."<br/>";
+			 if($skip == 0) echo "<b>Fetching ".$response["count"]." Product ...... Please Wait....</b><br/>";
 			
 			 for ($i = 0; $i < count($response["items"]); $i++) {
 				 foreach($response["items"][$i]["items"] as $item ) {
@@ -57,7 +57,7 @@ class FetchDataApi
 						$itemArray[$fieldFinal] = $fieldValue;
 						
 						// count field size
-						$stringFieldValue =  (string)$fieldValue;
+						$stringFieldValue =   (string)(is_array($fieldValue)?$fieldValue[0]["img"]:$fieldValue);
 						if(isset($this->fieldLenght[$fieldFinal])) {
 							if(strlen($stringFieldValue) > strlen($this->fieldLenght[$fieldFinal]) ) {
 								$this->fieldLenght[$fieldFinal] = strlen($stringFieldValue);
@@ -75,7 +75,7 @@ class FetchDataApi
 						$itemArray[$fieldFinal] = $fieldValue;	
 						
 						// count field size
-						$stringFieldValue = (string)$fieldValue;
+						$stringFieldValue = (string)(is_array($fieldValue)?$fieldValue[0]["img"]:$fieldValue);
 						if(isset($this->fieldLenght[$fieldFinal])) {
 							if(strlen($stringFieldValue) > strlen($this->fieldLenght[$fieldFinal]) ) {
 								$this->fieldLenght[$fieldFinal] = strlen($stringFieldValue);
@@ -102,16 +102,4 @@ class FetchDataApi
 		} while($skip > 0); 
 	 }
 	 
-	 
-	 
-	 
-	 
- 
- 
- 
- 
-			
-			
-	
-
 }

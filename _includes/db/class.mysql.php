@@ -75,13 +75,10 @@ class Mysql
     public function install()
     {
 		//delete table
-
 		$databaseName = $this->CONFIG["MYSQL"]["dbname"];
 		
 		$sqlDeleteTable = "DROP TABLE IF EXISTS $databaseName.rmi";
 		$this->connection->query($sqlDeleteTable);
-		 
-		
 
 		//create table
 		$sqlCreateTable = "CREATE TABLE $databaseName.rmi (id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY) ENGINE=InnoDB;";
@@ -93,7 +90,7 @@ class Mysql
 		//install fields
 		$this->installAddField($fetchObj->allFields, $fetchObj->fieldLenght);
 		
-		return true;
+		return $fetchObj;
     }
 	
 	public function reportCount()
@@ -112,10 +109,7 @@ class Mysql
 						  $databaseName.rmi
 						Group By
 						  $databaseName.rmi.RMI_vendor_uid";
-		return  $this->connection->query($sqlVendors);
-		
-		
-		
+		return  $this->connection->query($sqlVendors);	
 	}
 	
 	public function reportDesignes()
@@ -128,9 +122,6 @@ class Mysql
 						Group By
 						  $databaseName.rmi.RMI_design_name";
 		return  $this->connection->query($sqlDesignes);
-		
-		
-		
 	}
 	
 		public function reportCollections()
@@ -143,8 +134,6 @@ class Mysql
 						Group By
 						  $databaseName.rmi.RMI_collection_name";
 		return  $this->connection->query($sqlDesignes);
-		
-		
 		
 	}
  
